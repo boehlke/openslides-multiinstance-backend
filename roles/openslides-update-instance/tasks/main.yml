@@ -20,10 +20,13 @@
 
 - wait_for: path={{ openslides_instance_path }}/rkt-uuid
 
-- pause: seconds=15
-
 - shell: cat {{ openslides_instance_path }}/rkt-uuid
   register: rkt_uuid
+
+- name: Wait for container to be ready
+  sudo: yes
+  sudo_user: root
+  command: '/usr/bin/rkt status --wait-ready {{ rkt_uuid.stdout }}'
 
 - set_fact:
     openslides_rkt_manage: /usr/bin/rkt enter {{ rkt_uuid.stdout }} /app/manage.py
