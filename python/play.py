@@ -125,10 +125,6 @@ variables = {'openslides_secure_key': random_string(50),
 for instance_var in instance_data.keys():
     variables['openslides_instance_' + instance_var] = instance_data[instance_var]
 
-if variables['openslides_instance_projector_logo'] is None:
-    print("NONE LOGO!!")
-    variables['openslides_instance_projector_logo'] = ''
-
 # check if instance if already created
 instance_path = path.join(options.instances_dir, variables['openslides_instance_id'])
 
