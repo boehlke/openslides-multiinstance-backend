@@ -4,6 +4,11 @@
   sudo_user: root
   file: path={{ openslides_instance_path }} state=absent
 
+- name: Remove ansible log file
+  sudo: yes
+  sudo_user: root
+  file: path={{ openslides_instances_dir }}/ansible.{{ openslides_instance_id }}.log.json state=absent
+
 - name: Remove instance file
   sudo: yes
   sudo_user: root

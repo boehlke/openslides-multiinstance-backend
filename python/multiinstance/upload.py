@@ -16,7 +16,7 @@ def allowed_file(filename):
 
 def add_routes(app):
     @app.route('/api/logs/<instance_id>', methods=['GET'])
-    def get_file(instance_id):
+    def get_logs(instance_id):
         filename = os.path.join(app.config['UPLOAD_FOLDER'], blob_id)
         meta_file_content = open(filename + '.json').read()
         mime_type = mimetypes.guess_type(json.loads(meta_file_content)['filename'])
