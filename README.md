@@ -225,7 +225,7 @@ Take note of the printed SHA512 sum, e.g., `sha512-6a229c6187cb6168eaac1d11ce85b
 
 To fetch a new (updated) image from same source use the `--no-store` option:
 
-   rkt fetch --insecure-options=image --no-store docker://openslides/openslides:master
+   rkt fetch --insecure-options=image --pull-policy=update docker://openslides/openslides:master
 
 
 #### Configure OpenSlides backend directories and configuration files
