@@ -120,20 +120,9 @@ class Session(jsonapi.base.database.Session):
 
     def save_instance(self, instance):
         old_instance = self.find_instance(instance.data['id'])
-        # only the instance state can be changed, and logo
+        # only the instance state can be changed
         old_state = old_instance.data['state']
         new_state = instance.data['state']
-
-        if old_instance.data['projector_logo'] != instance.data['projector_logo']:
-            # save save to static directory
-            if instance.data['projector_logo'] is not None:
-                projector_logo_file_path = os.path.join(self.instances_dir, instance.data['id'],
-                                                     'static', 'img', 'logo-projector.png')
-
-                blob_file = os.path.join(self.upload_dir, instance.data['projector_logo'])
-                copyfile(blob_file, projector_logo_file_path)
-
-            instance.save(self.instance_meta_dir)
 
         old_version = old_instance.data['osversion']
         new_version = instance.data['osversion']

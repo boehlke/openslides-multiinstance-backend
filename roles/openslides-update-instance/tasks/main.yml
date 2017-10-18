@@ -1,11 +1,4 @@
 ---
-- stat: path={{ openslides_instance_path }}/static/img/logo-projector.png
-  register: logo_path
-
-- name: Copy projector logo file
-  when: logo_path.stat.exists == True
-  copy: src={{ openslides_instance_path }}/static/img/logo-projector.png dest={{ openslides_instance_path }}/logo-projector.png
-
 - name: Remove old static files
   sudo: yes
   sudo_user: root
@@ -39,14 +32,6 @@
   sudo: yes
   sudo_user: root
   command: '{{ openslides_rkt_manage }} collectstatic --noinput --clear'
-
-- name: Copy projector logo file
-  when: logo_path.stat.exists == True
-  copy: src={{ openslides_instance_path }}/logo-projector.png dest={{ openslides_instance_path }}/static/img/logo-projector.png
-
-- name: remove backup projector logo file
-  when: logo_path.stat.exists == True
-  file: path={{ openslides_instance_path }}/logo-projector.png state=absent
 
 - name: Change file permissions
   sudo: yes
