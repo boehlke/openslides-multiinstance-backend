@@ -1,6 +1,24 @@
 ---
+
+- name: Remove systemd units
+  include: remove_units.yml
+
 - name: Create instance directory
   file: path={{ openslides_instance_path }} state=directory
+
+- set_fact:
+    openslides_instance_num_webprocesses: 2
+
+- set_fact:
+    openslides_instance_num_workers: 6
+
+- set_fact:
+    openslides_instance_webprocesses: "{{ openslides_instance_webprocesses | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_webprocesses}}
+
+- set_fact:
+    openslides_instance_workers: "{{ openslides_instance_workers | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_workers}}
 
 - getent: database=passwd
 
@@ -36,6 +54,7 @@
 # setup manage command
 - shell: cat {{ openslides_instance_path }}/rkt-uuid
   register: rkt_uuid
+
 - set_fact:
     openslides_rkt_manage: /usr/bin/rkt enter {{ rkt_uuid.stdout }} /app/manage.py
 

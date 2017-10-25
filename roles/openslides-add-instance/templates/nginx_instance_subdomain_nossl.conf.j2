@@ -1,3 +1,9 @@
+upstream openslides_{{ openslides_instance_id }}  {
+ {% for i in openslides_instance_webprocesses %}
+   server localhost:{{ openslides_instance_systemd_port_base + i|int }};
+ {% endfor %}
+}
+
 server {
     listen 80;
 
@@ -28,7 +34,7 @@ server {
     }
 
     location / {
-        proxy_pass http://localhost:{{ openslides_instance_systemd_port }};
+        proxy_pass http://openslides_{{ openslides_instance_id }};
         proxy_http_version 1.1;
         error_page 502 /502.html;
         proxy_set_header Upgrade $http_upgrade;

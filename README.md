@@ -332,6 +332,16 @@ Create the following two files.  Add the above checksum.
 # sudo rkt gc --grace-period=0
 ```
 
+Instance states:
+ - new: only instance json exists, no instance directory, state null
+ - installing: if not exists $DIR/installed
+ - installing-failed: state installing-failed
+ - active: systemd unit available and active
+ - error: systemd unit failed state
+ - starting: service_state != error and proxy_service_state = active
+ - sleeping: ... socket_state = active
+ - stopped: no unit active (proxy socket/service and service)
+
 # Credits
 
 The ansible scripts are based on scripts made by @ostcar.

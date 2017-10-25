@@ -113,8 +113,8 @@ variable_manager = VariableManager()
 instance_number = instance_data['number']
 variables = {'openslides_secure_key': random_string(50),
              'openslides_instance_db_password': random_string(12),
-             'openslides_instance_systemd_port': str(23232 + instance_number * 2),
-             'openslides_instance_port': str(23232 + (instance_number * 2 + 1)),
+             'openslides_instance_systemd_port_base': 23232 + instance_number * 16,
+             'openslides_instance_port_base': 23232 + (instance_number * 16),
              'openslides_instances_dir': options.instances_dir,
              'postgres_host': 'localhost',
              'postgres_user': 'openslides_admin',
