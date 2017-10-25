@@ -27,16 +27,19 @@
 - set_fact:
     openslides_rkt_base: /usr/bin/rkt run
       --uuid-file-save={{ openslides_instance_path }}/rkt-uuid
-      --port=8000-tcp:{{ openslides_instance_port }}
+      {% for i in  openslides_instance_webprocesses%}--port={{8000+i|int}}-tcp:{{ openslides_instance_port_base + i|int }} {%endfor%}
       --set-env=PYTHONPATH=/data:/app
       --volume volume-data,kind=host,source={{ openslides_instance_path }},readOnly=false
-      --volume volume-supervisord-conf,kind=host,source={{ openslides_instance_path }}/supervisord.conf {{ openslides_instance_image }}
+      --volume volume-plugins,kind=host,source={{ openslides_instance_path }}/plugins {{ openslides_instance_image }}
       --user={{ openslides_uid }}
       --group={{ openslides_gid }}
-      --exec supervisord -- -c /supervisord.conf
+      --exec
 
 #- set_fact:
 #    openslides_rkt_base: /usr/bin/rkt run --pod-manifest={{ openslides_instance_path }}/rkt-manifest
+
+- name: Remove systemd units
+  include: remove_units.yml
 
 - name: Recreate systemd units
   include: create_units.yml

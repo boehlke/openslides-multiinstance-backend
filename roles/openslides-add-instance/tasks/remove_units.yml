@@ -1,0 +1,36 @@
+---
+
+- shell: "systemctl --no-legend --no-pager -q --plain --all --output=json list-units openslides_instance_*{{ openslides_instance_id }}*"
+  register: units
+
+- set_fact:
+    openslides_instance_units: []
+
+- set_fact:
+    openslides_instance_units: "{{ openslides_instance_units + [item.split(' ')[0]] }}"
+  when:
+    - item  != ""
+    - not "not-found" in item
+  with_items: "{{ units.stdout.split('\n') }}"
+
+- name: Remove old units
+  sudo: yes
+  sudo_user: root
+  service:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  with_items: "{{ openslides_instance_units }}"
+
+- name: Remove old unit files
+  sudo: yes
+  sudo_user: root
+  file:
+    path: "/etc/systemd/system/{{ item }}"
+    state: absent
+  with_items: "{{ openslides_instance_units }}"
+
+- name: Reload systemd units
+  command: systemctl daemon-reload
+  sudo: yes
+  sudo_user: root

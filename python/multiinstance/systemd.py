@@ -1,17 +1,11 @@
 from pydbus import SystemBus
 
 
-# def printit(obj):
-#     print(obj)
-# systemd.JobNew.connect(printit)
-# GObject.MainLoop().run()
-# help(systemd)
-
 class Systemd:
     def get_instance_unit_states(self):
         bus = SystemBus()
         systemd = bus.get(".systemd1")
-        manager = systemd.GetAll('org.freedesktop.systemd1.Manager')
+        # manager = systemd.GetAll('org.freedesktop.systemd1.Manager')
 
         states = []
 

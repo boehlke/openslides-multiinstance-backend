@@ -23,13 +23,6 @@
   command: systemctl daemon-reload
   become: yes
 
-- name: Start redis
-  become: yes
-  service:
-    name: redis
-    enabled: yes
-    state: started
-
 - name: Start and enalbe nginx without socket activation
   when: not openslides_nginx_socket_activation
   become: yes

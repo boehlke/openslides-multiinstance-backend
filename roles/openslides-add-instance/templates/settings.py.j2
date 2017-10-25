@@ -14,7 +14,7 @@ STATIC_ROOT = '/data/static/'
 
 CHANNEL_LAYERS['default']['BACKEND'] = 'asgi_redis.RedisChannelLayer'
 CHANNEL_LAYERS['default']['CONFIG']['prefix'] = 'asgi-{{ openslides_instance_id }}:'
-CHANNEL_LAYERS['default']['CONFIG']['hosts'] = [('172.16.28.1', 6379)]
+CHANNEL_LAYERS['default']['CONFIG']['hosts'] = [('172.16.28.1', {{ openslides_instance_port_base }})]
 
 CACHES = {
    "default": {
@@ -29,7 +29,7 @@ CACHES = {
 
 SESSION_ENGINE = 'redis_sessions.session'
 SESSION_REDIS_HOST = '172.16.28.1'
-SESSION_REDIS_PORT = 6379
+SESSION_REDIS_PORT = {{ openslides_instance_port_base }}
 SESSION_REDIS_DB = 0
 
 # The restricted data cache caches the data individual for each user.

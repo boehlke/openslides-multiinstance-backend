@@ -1,0 +1,11 @@
+[Unit]
+Description=Openslides Instance
+Wants=network.target
+
+[Service]
+ExecStart=/usr/bin/rkt run --insecure-options=image --port=6379-tcp:{{ openslides_instance_port_base }} docker://sameersbn/redis
+NonBlocking=true
+Restart=always
+
+[Install]
+RequiredBy={{ openslides_instance_service_name }}_1
