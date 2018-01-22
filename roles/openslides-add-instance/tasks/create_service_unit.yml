@@ -1,6 +1,5 @@
 - set_fact:
     openslides_rkt_daphne: /usr/bin/rkt run
-      --uuid-file-save={{ openslides_instance_path }}/rkt-uuid
       --port=8000-tcp:{{ openslides_instance_port_base + item|int }}
       --set-env=PYTHONPATH=/data:/app
       --volume volume-data,kind=host,source={{ openslides_instance_path }},readOnly=false
@@ -12,10 +11,6 @@
 - set_fact:
     daphne_number: "{{ item }}"
 
-- set_fact:
-    openslides_instance_workers: "{{ openslides_instance_workers | default([]) + [item] }}"
-  with_sequence: start=1 end={{openslides_instance_num_workers_per_webprocess}}
-
 - name: Create systemd units for openslides
   sudo: yes
   sudo_user: root
@@ -23,27 +18,3 @@
   template:
     dest: '/etc/systemd/system/{{ openslides_instance_service_name }}_{{ item }}.service'
     src: "./openslides_instance.service.j2"
-
-- name: Create systemd units for openslides workers
-  sudo: yes
-  sudo_user: root
-  template:
-    dest: '/etc/systemd/system/{{ openslides_instance_service_name }}_worker_{{ daphne_number }}_{{ item }}.service'
-    src: "./openslides_instance_worker.service.j2"
-  with_items: "{{ openslides_instance_workers }}"
-
-- name: Start and enalbe openslides
-  sudo: yes
-  sudo_user: root
-  service:
-    name: '{{ openslides_instance_service_name }}_worker_{{ daphne_number }}_{{ item }}.service'
-    enabled: yes
-  with_items: "{{ openslides_instance_workers }}"
-
-- name: Start and enalbe openslides
-  sudo: yes
-  sudo_user: root
-  service:
-    name: 'openslides_instance_proxy_{{ openslides_instance_id }}_{{ item }}.service'
-    enabled: yes
-  with_items: "{{ openslides_instance_webprocesses }}"
