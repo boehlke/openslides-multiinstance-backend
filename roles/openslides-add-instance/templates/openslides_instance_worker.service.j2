@@ -1,8 +1,9 @@
 [Unit]
 Description=Openslides Instance Worker
-Wants=network.target
+After=network.target
+Requires=network.target {{ openslides_instance_service_name }}_redis.service {{ openslides_instance_service_name }}_1.service
 
 [Service]
-ExecStart={{ openslides_rkt_base }} /app/manage.py -- runworker
+ExecStart={{ openslides_rkt_manage }} runworker
 NonBlocking=true
 Restart=always

@@ -54,7 +54,7 @@ class Instance(SimpleApiObject):
     event_location = ObjectAttribute("event_location")
     event_organizer = ObjectAttribute("event_organizer")
 
-    num_workers_per_webprocess = ObjectAttribute("num_workers_per_webprocess")
+    num_workers = ObjectAttribute("num_workers")
     num_webprocesses = ObjectAttribute("num_webprocesses")
 
     state = ObjectAttribute("state")

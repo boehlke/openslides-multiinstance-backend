@@ -6,12 +6,6 @@
 - name: Create instance directory
   file: path={{ openslides_instance_path }} state=directory
 
-#- set_fact:
-#    openslides_instance_num_webprocesses: openslides_instance_num_webprocesses | int
-#
-#- set_fact:
-#    openslides_instance_num_workers_per_webprocess: openslides_instance_num_workers_per_webprocess | int
-
 - set_fact:
     openslides_instance_webprocesses: "{{ openslides_instance_webprocesses | default([]) + [item] }}"
   with_sequence: start=1 end={{openslides_instance_num_webprocesses}}
@@ -36,11 +30,22 @@
     openslides_uid: "{{ getent_passwd[username_on_the_host][1] }}"
     openslides_gid: "{{ getent_passwd[username_on_the_host][2] }}"
 
+- set_fact:
+    openslides_instance_workers: "{{ openslides_instance_workers | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_workers}}
+
+- set_fact:
+    openslides_instance_webprocesses: "{{ openslides_instance_webprocesses | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_webprocesses}}
+
 - name: Create nginx configuration
   include: create_nginx_conf.yml
 
 - name: Create instance container
   include: create_container.yml
+
+- set_fact:
+    openslides_rkt_manage: "{{ openslides_rkt_simple }} /app/manage.py --"
 
 - name: Create and start systemd units
   include: create_units.yml
@@ -48,16 +53,13 @@
 - wait_for: path={{ openslides_instance_path }}/rkt-uuid
 
 # setup manage command
-- shell: cat {{ openslides_instance_path }}/rkt-uuid
-  register: rkt_uuid
+#- shell: cat {{ openslides_instance_path }}/rkt-uuid
+#  register: rkt_uuid
 
-- set_fact:
-    openslides_rkt_manage: "{{ openslides_rkt_simple }} /app/manage.py --"
-
-- name: Wait for container to be ready
-  sudo: yes
-  sudo_user: root
-  command: '/usr/bin/rkt status --wait-ready {{ rkt_uuid.stdout }}'
+#- name: Wait for container to be ready
+#  sudo: yes
+#  sudo_user: root
+#  command: '/usr/bin/rkt status --wait-ready {{ rkt_uuid.stdout }}'
 
 - name: Initialize database
   include: init_instance_database.yml

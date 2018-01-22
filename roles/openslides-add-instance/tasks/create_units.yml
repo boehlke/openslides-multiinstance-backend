@@ -29,11 +29,35 @@
     src: "./openslides_instance_proxy.socket.j2"
   with_items: "{{ openslides_instance_webprocesses }}"
 
+- name: Create systemd units for openslides workers
+  sudo: yes
+  sudo_user: root
+  template:
+    dest: '/etc/systemd/system/{{ openslides_instance_service_name }}_worker_{{ item }}.service'
+    src: "./openslides_instance_worker.service.j2"
+  with_items: "{{ openslides_instance_workers }}"
+
 - name: Reload systemd units
   sudo: yes
   sudo_user: root
   when: createInstanceService.changed or createInstanceSocket.changed or createInstanceProxyService.changed
   command: systemctl daemon-reload
+
+- name: Enalbe openslides services
+  sudo: yes
+  sudo_user: root
+  service:
+    name: 'openslides_instance_proxy_{{ openslides_instance_id }}_{{ item }}.service'
+    enabled: yes
+  with_items: "{{ openslides_instance_webprocesses }}"
+
+- name: Enalbe openslides workers
+  sudo: yes
+  sudo_user: root
+  service:
+    name: 'openslides_instance_{{ openslides_instance_id }}_worker_{{ item }}.service'
+    enabled: yes
+  with_items: "{{ openslides_instance_workers }}"
 
 #- name: Start and enalbe nginx via socket activation
 #  sudo: yes
@@ -44,10 +68,10 @@
 #    state: started
 #  with_items: "{{ openslides_instance_webprocesses }}"
 
-- name: Start redis
-  sudo: yes
-  sudo_user: root
-  service:
-    name: '{{ openslides_instance_service_name }}_redis.service'
-    enabled: yes
-    state: started
+#- name: Start redis
+#  sudo: yes
+#  sudo_user: root
+#  service:
+#    name: '{{ openslides_instance_service_name }}_redis.service'
+#    enabled: yes
+#    state: started

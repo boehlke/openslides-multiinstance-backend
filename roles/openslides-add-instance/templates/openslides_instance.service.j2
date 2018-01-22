@@ -1,6 +1,7 @@
 [Unit]
 Description=Openslides Instance
-Requires={{ openslides_instance_service_name }}_redis.service{% for i in openslides_instance_workers %} {{ openslides_instance_service_name }}_worker_{{ item }}_{{ i }}.service{% endfor %}
+Requires={{ openslides_instance_service_name }}_redis.service{% for i in openslides_instance_webprocesses %} {{ openslides_instance_service_name }}_{{ i }}.service{% endfor %}
+Wants={% for i in openslides_instance_workers %}{{ openslides_instance_service_name }}_worker_{{ i }}.service {% endfor %}
 
 [Service]
 # Environment="PYTHONPATH=/home/ab/git/OpenSlides:{{ openslides_instance_path }}"
