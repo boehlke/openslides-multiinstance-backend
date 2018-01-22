@@ -1,10 +1,11 @@
 [Unit]
 Description=Openslides Instance
+Requires={{ openslides_instance_service_name }}_redis.service{% for i in openslides_instance_workers %} {{ openslides_instance_service_name }}_worker_{{ item }}_{{ i }}.service{% endfor %}
 
 [Service]
 # Environment="PYTHONPATH=/home/ab/git/OpenSlides:{{ openslides_instance_path }}"
 # ExecStart=/home/ab/.virtualenvs/os/bin/python /home/ab/git/OpenSlides/manage.py runserver localhost:{{ openslides_instance_port_base + item|int }}
-ExecStart={{ openslides_rkt_base }} /usr/local/bin/daphne -- openslides.asgi:channel_layer -p {{ 8000 + item|int}} -b 0.0.0.0
+ExecStart={{ openslides_rkt_daphne }}
 NonBlocking=true
 # User=openslides
 

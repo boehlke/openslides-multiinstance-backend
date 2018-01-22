@@ -18,14 +18,5 @@
     dest: "{{ openslides_instance_path }}/502.html"
     src: 502.html.j2
 
-- set_fact:
-    openslides_rkt_base: /usr/bin/rkt run
-      --uuid-file-save={{ openslides_instance_path }}/rkt-uuid
-      {% for i in  openslides_instance_webprocesses%}--port={{8000+i|int}}-tcp:{{ openslides_instance_port_base + i|int }} {%endfor%}
-      --set-env=PYTHONPATH=/data:/app
-      --volume volume-data,kind=host,source={{ openslides_instance_path }},readOnly=false
-      --volume volume-plugins,kind=host,source={{ openslides_instance_path }}/plugins {{ openslides_instance_image }}
-      --user={{ openslides_uid }}
-      --group={{ openslides_gid }}
-      --exec
-
+- name: Set rkt fact
+  include: set_openslides_rkt_base.yml

@@ -53,6 +53,9 @@ class Instance(SimpleApiObject):
     event_date = ObjectAttribute("event_date")
     event_location = ObjectAttribute("event_location")
 
+    num_workers_per_webprocess = ObjectAttribute("num_workers_per_webprocess")
+    num_webprocesses = ObjectAttribute("num_webprocesses")
+
     state = ObjectAttribute("state")
 
     def save(self, directory):
@@ -68,4 +71,3 @@ class Instance(SimpleApiObject):
 
     def get_instance_filename(self, instance_meta_dir):
         return os.path.join(instance_meta_dir, "openslides_instance_" + self.data['id'] + '.json')
-

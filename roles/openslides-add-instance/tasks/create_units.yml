@@ -8,21 +8,8 @@
     src: "./openslides_instance_redis.service.j2"
 
 - name: Create systemd units for openslides
-  sudo: yes
-  sudo_user: root
-  register: createInstanceService
-  template:
-    dest: '/etc/systemd/system/{{ openslides_instance_service_name }}_{{ item }}.service'
-    src: "./openslides_instance.service.j2"
+  include: create_service_unit.yml
   with_items: "{{ openslides_instance_webprocesses }}"
-
-- name: Create systemd units for openslides workers
-  sudo: yes
-  sudo_user: root
-  template:
-    dest: '/etc/systemd/system/{{ openslides_instance_service_name }}_worker_{{ item }}.service'
-    src: "./openslides_instance_worker.service.j2"
-  with_items: "{{ openslides_instance_workers }}"
 
 - name: Create systemd proxy units for openslides
   sudo: yes
@@ -48,22 +35,14 @@
   when: createInstanceService.changed or createInstanceSocket.changed or createInstanceProxyService.changed
   command: systemctl daemon-reload
 
-- name: Start and enalbe openslides
-  sudo: yes
-  sudo_user: root
-  service:
-    name: 'openslides_instance_proxy_{{ openslides_instance_id }}_{{ item }}.service'
-    enabled: yes
-  with_items: "{{ openslides_instance_webprocesses }}"
-
-- name: Start and enalbe nginx via socket activation
-  sudo: yes
-  sudo_user: root
-  service:
-    name: 'openslides_instance_proxy_{{ openslides_instance_id }}_{{ item }}.socket'
-    enabled: yes
-    state: started
-  with_items: "{{ openslides_instance_webprocesses }}"
+#- name: Start and enalbe nginx via socket activation
+#  sudo: yes
+#  sudo_user: root
+#  service:
+#    name: 'openslides_instance_proxy_{{ openslides_instance_id }}_{{ item }}.socket'
+#    enabled: yes
+#    state: started
+#  with_items: "{{ openslides_instance_webprocesses }}"
 
 - name: Start redis
   sudo: yes
