@@ -50,8 +50,7 @@
 - name: Create and start systemd units
   include: create_units.yml
 
-- wait_for: path={{ openslides_instance_path }}/rkt-uuid
-
+#- wait_for: path={{ openslides_instance_path }}/rkt-uuid
 # setup manage command
 #- shell: cat {{ openslides_instance_path }}/rkt-uuid
 #  register: rkt_uuid
