@@ -60,8 +60,23 @@
 #  sudo_user: root
 #  command: '/usr/bin/rkt status --wait-ready {{ rkt_uuid.stdout }}'
 
+- name: Start redis because migrations fail otherwise
+  sudo: yes
+  sudo_user: root
+  service:
+    name: '{{ openslides_instance_service_name }}_redis.service'
+    enabled: yes
+    state: started
+
 - name: Initialize database
   include: init_instance_database.yml
+
+- name: Stop redis
+  sudo: yes
+  sudo_user: root
+  service:
+    name: '{{ openslides_instance_service_name }}_redis.service'
+    state: stopped
 
 - stat: path={{ openslides_instance_path }}/static
   register: static_path
