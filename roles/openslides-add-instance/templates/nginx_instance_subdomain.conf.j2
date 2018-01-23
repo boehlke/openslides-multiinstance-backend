@@ -1,6 +1,12 @@
 # OpenSlides multi-instance container configuration for
 # {{ openslides_instance_slug }}.{{ openslides_instance_parent_domain }}
 
+upstream openslides_{{ openslides_instance_id }}  {
+ {% for i in openslides_instance_webprocesses %}
+   server localhost:{{ openslides_instance_systemd_port_base + i|int }};
+ {% endfor %}
+}
+
 server {
     listen 80;
     listen [::]:80;
@@ -46,7 +52,7 @@ server {
     }
 
     location / {
-        proxy_pass {% for i in openslides_instance_webprocesses %}http://localhost:{{ openslides_instance_systemd_port_base + i|int }} {% endfor %};
+        proxy_pass http://openslides_{{ openslides_instance_id }};
         proxy_http_version 1.1;
         error_page 502 /502.html;
         proxy_set_header Upgrade $http_upgrade;
