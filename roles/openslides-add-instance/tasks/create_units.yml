@@ -1,4 +1,16 @@
 ---
+- find:
+    paths: /etc/systemd/system
+    patterns: "*{{ openslides_instance_id }}*"
+  register: files
+
+- name: Remove current service/socket files
+  sudo: yes
+  sudo_user: root
+  file:
+    path: "{{ item['path'] }}"
+    state: absent
+  with_items: "{{ files['files'] }}"
 
 - name: Create systemd units for openslides redis
   sudo: yes
@@ -10,6 +22,13 @@
 - name: Create systemd units for openslides
   include: create_service_unit.yml
   with_items: "{{ openslides_instance_webprocesses }}"
+
+- name: Create systemd units for openslides redis
+  sudo: yes
+  sudo_user: root
+  template:
+    dest: '/etc/systemd/system/{{ openslides_instance_service_name }}_redis.service'
+    src: "./openslides_instance_redis.service.j2"
 
 - name: Create systemd proxy units for openslides
   sudo: yes
