@@ -112,15 +112,15 @@ class InstanceListing:
             if not unit_name.startswith('openslides_instance'):
                 continue
 
-            match = re.match('openslides_instance_proxy_(.+).socket', unit_name)
+            match = re.match('openslides_instance_proxy_(.+)_(.+)\.socket', unit_name)
             if match is not None:
                 state_map[match.group(1)]['proxy_socket'] = unit_state
                 continue
-            match = re.match('openslides_instance_proxy_(.+).service', unit_name)
+            match = re.match('openslides_instance_proxy_(.+)_(.+)\.service', unit_name)
             if match is not None:
                 state_map[match.group(1)]['proxy_service'] = unit_state
                 continue
-            match = re.match('openslides_instance_(.+).service', unit_name)
+            match = re.match('openslides_instance_(.+)_(.+)\.service', unit_name)
             if match is not None:
                 state_map[match.group(1)]['service'] = unit_state
                 continue
