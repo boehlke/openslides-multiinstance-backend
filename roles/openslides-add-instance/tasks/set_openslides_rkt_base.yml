@@ -1,16 +1,6 @@
 ---
 
 - set_fact:
-    openslides_rkt_base: /usr/bin/rkt run
-      --uuid-file-save={{ openslides_instance_path }}/rkt-uuid
-      --set-env=PYTHONPATH=/data:/app
-      --volume volume-data,kind=host,source={{ openslides_instance_path }},readOnly=false
-      --volume volume-plugins,kind=host,source={{ openslides_instance_path }}/plugins {{ openslides_instance_image }}
-      --user={{ openslides_uid }}
-      --group={{ openslides_gid }}
-      --exec
-
-- set_fact:
     openslides_rkt_simple: /usr/bin/rkt run
       --set-env=PYTHONPATH=/data:/app
       --volume volume-data,kind=host,source={{ openslides_instance_path }},readOnly=false

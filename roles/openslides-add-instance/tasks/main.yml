@@ -92,8 +92,10 @@
   sudo_user: root
   file: path={{ openslides_instance_path }} recurse=yes owner={{ username_on_the_host}}
 
-- include: recreate_units.yml
-
 - name: mark instance installed
   file: path={{ openslides_instance_path }}/installed state=touch
 
+- name: cleanup rkt containers
+  sudo: yes
+  sudo_user: root
+  shell: rkt gc --grace-period=0
