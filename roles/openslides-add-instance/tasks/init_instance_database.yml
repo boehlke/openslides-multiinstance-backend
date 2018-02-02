@@ -26,24 +26,15 @@
                    priv=ALL
                    state=present
 
-#- name: restart postgresql to make sure it binds to veth ip
-#  sudo: yes
-#  sudo_user: root
-#  service:
-#    name: postgresql
-#    state: restarted
-
-#- name: restart redis to make sure it bind to veth ip
-#  sudo: yes
-#  sudo_user: root
-#  service:
-#    name: redis-server
-#    state: restarted
-
 - name: Migrate database
   sudo: yes
   sudo_user: root
   command: '{{ openslides_rkt_manage }} migrate --noinput'
+
+- name: Change admin password
+  sudo: yes
+  sudo_user: root
+  command: '{{ openslides_rkt_manage }} createsuperuser'
 
 - name: Change admin password
   sudo: yes
@@ -70,7 +61,6 @@
       - { key: 'general_event_description', value: '{{ openslides_instance_event_description }}' }
       - { key: 'general_event_date', value: '{{ openslides_instance_event_date }}' }
       - { key: 'general_event_location', value: '{{ openslides_instance_event_location }}' }
-      - { key: 'general_event_organizer', value: '{{ openslides_instance_event_organizer }}' }
 
 # - name: Activate anonymous user
 #   when: openslidesMigratedDatabase.changed
