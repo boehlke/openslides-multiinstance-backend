@@ -29,8 +29,3 @@
     path: "/etc/systemd/system/{{ item }}"
     state: absent
   with_items: "{{ openslides_instance_units }}"
-
-- name: Reload systemd units
-  command: systemctl daemon-reload
-  sudo: yes
-  sudo_user: root

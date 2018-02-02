@@ -1,0 +1,42 @@
+---
+- include: ../../openslides-add-instance/tasks/set_command_facts.yml
+
+- name: Remove old static files
+  sudo: yes
+  sudo_user: root
+  file: path={{ openslides_instance_path }}/static state=absent
+
+- set_fact:
+    openslides_instance_workers: "{{ openslides_instance_workers | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_workers}}
+
+- set_fact:
+    openslides_instance_webprocesses: "{{ openslides_instance_webprocesses | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_webprocesses}}
+
+- include: ../../openslides-add-instance/tasks/remove_units.yml
+- include: ../../openslides-add-instance/tasks/create_units.yml
+
+- name: Restart openslides Instance
+  sudo: yes
+  sudo_user: root
+  service:
+    name: 'openslides_instance_{{ openslides_instance_id }}_{{ item }}.service'
+    state: restarted
+  with_items: "{{ openslides_instance_webprocesses }}"
+
+- name: Collect static
+  sudo: yes
+  sudo_user: root
+  command: '{{ openslides_rkt_manage }} collectstatic --noinput --clear'
+
+- name: Change file permissions
+  sudo: yes
+  sudo_user: root
+  file: path={{ openslides_instance_path }} recurse=yes owner={{ username_on_the_host}}
+
+- name: Migrate database
+  sudo: yes
+  sudo_user: root
+  command: '{{ openslides_rkt_manage }} migrate --noinput'
+

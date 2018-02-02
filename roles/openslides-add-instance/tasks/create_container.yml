@@ -21,5 +21,5 @@
     dest: "{{ openslides_instance_path }}/502.html"
     src: 502.html.j2
 
-- name: Set rkt fact
-  include: set_openslides_rkt_base.yml
+- name: Set rkt facts
+  include: set_command_facts.yml

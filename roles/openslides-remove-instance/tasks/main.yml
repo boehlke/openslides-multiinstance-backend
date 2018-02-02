@@ -22,3 +22,8 @@
                  login_password={{ postgres_password }}
 
 - include: remove_units.yml
+
+- name: Reload systemd units
+  command: systemctl daemon-reload
+  sudo: yes
+  sudo_user: root

@@ -50,16 +50,6 @@
 - name: Create and start systemd units
   include: create_units.yml
 
-#- wait_for: path={{ openslides_instance_path }}/rkt-uuid
-# setup manage command
-#- shell: cat {{ openslides_instance_path }}/rkt-uuid
-#  register: rkt_uuid
-
-#- name: Wait for container to be ready
-#  sudo: yes
-#  sudo_user: root
-#  command: '/usr/bin/rkt status --wait-ready {{ rkt_uuid.stdout }}'
-
 - name: Start redis because migrations fail otherwise
   sudo: yes
   sudo_user: root
