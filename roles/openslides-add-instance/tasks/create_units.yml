@@ -77,10 +77,7 @@
   service:
     name: 'openslides_instance_{{ openslides_instance_id }}_worker_{{ item }}.service'
     enabled: yes
-<<<<<<< HEAD
-=======
     state: started
->>>>>>> origin/FIXES
   with_items: "{{ openslides_instance_workers }}"
 
 #- name: Start and enalbe nginx via socket activation
