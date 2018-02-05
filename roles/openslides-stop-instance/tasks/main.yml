@@ -3,6 +3,10 @@
     openslides_instance_webprocesses: "{{ openslides_instance_webprocesses | default([]) + [item] }}"
   with_sequence: start=1 end={{openslides_instance_num_webprocesses}}
 
+- set_fact:
+    openslides_instance_workers: "{{ openslides_instance_workers | default([]) + [item] }}"
+  with_sequence: start=1 end={{openslides_instance_num_workers}}
+
 - name: Deactivate openslides proxy socket
   sudo: yes
   sudo_user: root

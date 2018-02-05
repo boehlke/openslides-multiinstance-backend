@@ -1,5 +1,4 @@
 ---
-
 - shell: "systemctl --no-legend --no-pager -q --plain --all --output=json list-units openslides_instance_*{{ openslides_instance_id }}*"
   register: units
 
