@@ -15,6 +15,7 @@
   file: path={{ openslides_instance_file }} state=absent
 
 - name: Remove database
+  sudo_user: postgres
   postgresql_db: name=openslides_{{ openslides_instance_id }}
                  state=absent
                  login_host={{ postgres_host }}
